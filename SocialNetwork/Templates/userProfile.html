@@ -1,0 +1,72 @@
+{%  extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+{{USER.username}}
+{% endblock title %}
+
+
+{% block navbar %}
+
+
+{%  include 'navbar.html' %}
+
+{% endblock navbar %}
+
+{% block content %}
+
+<div class="row" style="margin-top:2%;">
+
+    <div class="col-md-3" style="margin-left:4%; text-align: center;">
+        <div class="card card-body" style="border-radius:25px;">
+            <img class="img-fluid img-thumbnail"  src="{{USER.profile_image.url}}" >
+
+            <h3 >{{USER.first_name}} {{USER.last_name}}</h3>
+            <a href="#"><h4 >@{{USER.username}}</h4></a>
+             <h6>{{USER.get_num_posts}} Posts</h6>
+             <h6>{{get_num_followers}} follower</h6>
+            <p>{{USER.bio}}</p>
+            {% if is_following %}
+            <a href="/unfollow/{{USER.id}}" style="display: inline-block; margin: 3px 0 0 0;"><button class="btn btn-danger" style="width: 100%;">Unfollow</button></a>
+            {% else %}
+            <a href="/follow/{{USER.id}}" style="display: inline-block; margin: 0 0 3px 0;"><button class="btn btn-primary" style="width: 100%;">Follow</button></a>
+            {% endif %}
+        </div>
+    </div>
+
+  <div class="col-md-8" >
+        <div class="card card-body"style="border-radius:25px; min-height:100%;">
+                {% for post in object_list %}
+                <div class="card" style="margin: 2%;">
+                    <div class="card-body">
+                        <p class="card-text">{{post.text}}</p>
+                        <a href="#" class="card-link">{{post.date_posted}}</a>
+                    </div>
+                </div>
+                {% endfor %}
+
+                {% if is_paginated %}
+
+                <ul class="pagination" >
+                    {% if page_obj.has_previous %}
+                    <li>
+                        <span><a href="?page={{ page_obj.previous_page_number }}"> <svg style="width:26px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path fill="#00a1ff" d="M199.7 299.8C189.4 312.4 190.2 330.9 201.9 342.6L329.9 470.6C339.1 479.8 352.8 482.5 364.8 477.5C376.8 472.5 384.6 460.9 384.6 447.9L384.6 191.9C384.6 179 376.8 167.3 364.8 162.3C352.8 157.3 339.1 160.1 329.9 169.2L201.9 297.2L199.7 299.6z"/></svg> </a></span>
+                    </li>
+                    {% endif %}
+                    <li class="">
+                        <span> Page  {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} </span>
+                    </li>
+                    {% if page_obj.has_next %}
+                    <li>
+                        <span><a href="?page={{ page_obj.next_page_number }}"><svg style="width:26px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path fill="#00a1ff" d="M441.3 299.8C451.5 312.4 450.8 330.9 439.1 342.6L311.1 470.6C301.9 479.8 288.2 482.5 276.2 477.5C264.2 472.5 256.5 460.9 256.5 448L256.5 192C256.5 179.1 264.3 167.4 276.3 162.4C288.3 157.4 302 160.2 311.2 169.3L439.2 297.3L441.4 299.7z"/></svg> </a></span>
+                    </li>
+                    {% endif %}
+                </ul>
+                {% endif %}
+        </div>
+        <br>
+    </div>
+
+</div>
+
+{% endblock content %}
